@@ -35,11 +35,13 @@ export class ZebraClient {
     async request<T>(
         operationName: string,
         endpoint: string,
-        options: RequestInit = {}
+        options: RequestInit = {},
+        route?: string
     ): Promise<T> {
         const context: RequestContext = {
             method: options.method || 'GET',
             endpoint,
+            route,
             operationName,
             startTime: Date.now(),
         };

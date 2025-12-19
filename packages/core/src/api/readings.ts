@@ -25,7 +25,9 @@ export class ReadingsAPI {
 
         return this.client.request<ZebraReadingsResponse>(
             'readings.getLog',
-            url.toString()
+            url.toString(),
+            { method: 'GET' },
+            'environmental/tasks/:taskId/readings'
         );
     }
 }

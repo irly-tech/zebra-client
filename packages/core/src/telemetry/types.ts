@@ -23,6 +23,7 @@ export interface TelemetryProvider {
 export interface RequestContext {
     method: string;
     endpoint: string;
+    route?: string;
     operationName: string;
     startTime: number;
     traceId?: string;

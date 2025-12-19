@@ -44,8 +44,27 @@ describe('ZebraClient', () => {
             }
         });
 
-        const result = await client.request('test', 'test-endpoint');
+        const result = await client.request('test', 'test-endpoint', { method: 'GET' }, 'test/:id');
         assert.strictEqual(attempts, 2);
         assert.deepStrictEqual(result, { success: true });
+    });
+
+    test('should pass route to telemetry provider', async () => {
+        let capturedRoute: string | undefined;
+        const mockTelemetry = {
+            onRequestStart: (ctx: any) => { capturedRoute = ctx.route; },
+            onRequestEnd: () => { },
+            onRetry: () => { },
+            onRateLimitHit: () => { },
+        };
+
+        const client = new ZebraClient({
+            apiKey: 'test-key',
+            telemetryProvider: mockTelemetry as any,
+            fetch: (async () => new Response('{}')) as any
+        });
+
+        await client.request('test', 'sensors/123', { method: 'GET' }, 'sensors/:id');
+        assert.strictEqual(capturedRoute, 'sensors/:id');
     });
 });

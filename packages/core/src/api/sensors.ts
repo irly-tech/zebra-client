@@ -12,7 +12,9 @@ export class SensorsAPI {
     async getStatus(serialNumber: string): Promise<SensorStatus> {
         return this.client.request<SensorStatus>(
             'sensors.getStatus',
-            `environmental/sensors/${serialNumber}`
+            `environmental/sensors/${serialNumber}`,
+            { method: 'GET' },
+            'environmental/sensors/:serialNumber'
         );
     }
 
@@ -23,7 +25,9 @@ export class SensorsAPI {
 
         return this.client.request<SensorListResponse>(
             'sensors.list',
-            url.toString()
+            url.toString(),
+            { method: 'GET' },
+            'environmental/sensors'
         );
     }
 }

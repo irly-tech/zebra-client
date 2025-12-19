@@ -19,7 +19,9 @@ export class AlarmsAPI {
 
         return this.client.request<ZebraAlarmsResponse>(
             'alarms.list',
-            url.toString()
+            url.toString(),
+            { method: 'GET' },
+            'environmental/tasks/:taskId/alarms'
         );
     }
 }

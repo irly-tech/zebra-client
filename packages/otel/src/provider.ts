@@ -58,6 +58,7 @@ export class OTelTelemetryProvider implements TelemetryProvider {
                 ...context.attributes,
                 'http.method': context.method,
                 'http.url': context.endpoint,
+                'http.route': context.route || context.endpoint,
                 'zebra.operation': context.operationName,
             },
         });
@@ -69,6 +70,7 @@ export class OTelTelemetryProvider implements TelemetryProvider {
         this.requestCounter.add(1, {
             ...this.defaultAttributes,
             'zebra.operation': context.operationName,
+            'http.route': context.route || context.endpoint,
         });
     }
 
@@ -94,6 +96,7 @@ export class OTelTelemetryProvider implements TelemetryProvider {
                 this.errorCounter.add(1, {
                     ...this.defaultAttributes,
                     'zebra.operation': context.operationName,
+                    'http.route': context.route || context.endpoint,
                     'http.status_code': result.statusCode,
                     'error.type': result.error?.name || 'Error',
                 });
@@ -106,6 +109,7 @@ export class OTelTelemetryProvider implements TelemetryProvider {
         this.durationHistogram.record(result.duration, {
             ...this.defaultAttributes,
             'zebra.operation': context.operationName,
+            'http.route': context.route || context.endpoint,
             'http.status_code': result.statusCode,
         });
     }
