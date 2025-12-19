@@ -1,0 +1,38 @@
+{
+    "name": "@irly-tech/zebra-client-otel",
+    "version": "0.1.0",
+    "description": "OpenTelemetry extension for @irly-tech/zebra-client",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "type": "module",
+    "files": [
+        "dist",
+        "README.md"
+    ],
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "scripts": {
+        "build": "rimraf dist && tsc",
+        "test": "node --test src/**/*.test.ts"
+    },
+    "keywords": [
+        "zebra",
+        "opentelemetry",
+        "otel",
+        "tracing",
+        "metrics"
+    ],
+    "author": "irly-tech",
+    "license": "UNLICENSED",
+    "peerDependencies": {
+        "@irly-tech/zebra-client": "^0.1.0",
+        "@opentelemetry/api": "^1.7.0"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.3",
+        "rimraf": "^5.0.5",
+        "@types/node": "^20.11.0",
+        "@opentelemetry/api": "^1.7.0"
+    }
+}

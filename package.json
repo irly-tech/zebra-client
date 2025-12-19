@@ -1,0 +1,17 @@
+{
+    "name": "@irly-tech/zebra-client-monorepo",
+    "private": true,
+    "description": "Monorepo for irly-tech Zebra API client",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "npm run build --workspaces",
+        "test": "npm run test --workspaces",
+        "lint": "npm run lint --workspaces"
+    },
+    "devDependencies": {
+        "typescript": "^5.3.3",
+        "rimraf": "^5.0.5"
+    }
+}
