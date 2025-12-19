@@ -16,6 +16,15 @@
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist"
     },
+    "files": [],
+    "references": [
+        {
+            "path": "packages/core"
+        },
+        {
+            "path": "packages/otel"
+        }
+    ],
     "exclude": [
         "node_modules",
         "dist"
