@@ -6,12 +6,14 @@
         "packages/*"
     ],
     "scripts": {
-        "build": "npm run build --workspaces",
+        "build": "tsc --build",
+        "build:clean": "tsc --build --clean && tsc --build",
         "test": "npm run test --workspaces",
         "lint": "npm run lint --workspaces"
     },
     "devDependencies": {
-        "typescript": "^5.3.3",
-        "rimraf": "^5.0.5"
+        "rimraf": "^5.0.5",
+        "tsx": "^4.21.0",
+        "typescript": "^5.3.3"
     }
 }
