@@ -15,7 +15,7 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc",
-        "test": "node --test src/**/*.test.ts"
+        "test": "node --import tsx --test $(find src -name '*.test.ts')"
     },
     "keywords": [
         "zebra",
