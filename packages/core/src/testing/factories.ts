@@ -11,15 +11,11 @@ export function createMockReadingsResponse(
     overrides: Partial<ZebraReadingsResponse> = {}
 ): ZebraReadingsResponse {
     return {
-        sensors_readings: [
+        results: [
             createMockReading(),
         ],
-        cursor: undefined,
-        page_response: {
-            total_pages: 1,
-            page_size: 100,
-            current_page: 0,
-        },
+        total_count: 1,
+        nextCursor: undefined,
         ...overrides,
     };
 }
@@ -29,12 +25,36 @@ export function createMockReading(
 ): ZebraReading {
     return {
         id: `reading-${Date.now()}`,
+        deviceId: 'device-123',
         sensor_id: 'ZEB-001',
-        occurred: new Date().toISOString(),
-        temperature: 4.5,
-        humidity: 65,
-        battery_level: 95,
-        signal_strength: -45,
+        timestamp: new Date().toISOString(),
+        decode: {
+            temperature: {
+                sample: 4.5,
+                sample_time: new Date().toISOString(),
+                alert: false,
+            },
+            humidity: {
+                sample: 65,
+            },
+        },
+        event: {
+            timestamp: new Date().toISOString(),
+            data: {
+                rssi: -45,
+            },
+        },
+        analytics: {
+            coordinates: {
+                global: {
+                    latitude: 40.7128,
+                    longitude: -74.0060,
+                    accuracy: 10,
+                },
+            },
+            location_name: 'Test Location',
+        },
+        mac_address: '00:11:22:33:44:55',
         ...overrides,
     };
 }
@@ -48,6 +68,13 @@ export function createMockSensorStatus(
         signal_strength: -45,
         last_seen: new Date().toISOString(),
         firmware_version: '1.2.3',
+        model: 'ZebraSense-3050',
+        hardware_revision: 'v1',
+        most_recent: {
+            last_read_time: new Date().toISOString(),
+            sensor_task_status: 'ACTIVE',
+            alarm_count: 0,
+        },
         ...overrides,
     };
 }

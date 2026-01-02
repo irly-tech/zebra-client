@@ -1,17 +1,48 @@
 export interface ZebraReading {
-    id: string;
-    sensor_id: string;
-    occurred: string;
-    temperature: number;
-    humidity?: number;
-    battery_level?: number;
-    signal_strength?: number;
+    id?: string;
+    deviceId?: string;
+    timestamp: string;
+    decode?: {
+        temperature?: {
+            sample: number;
+            sample_time?: string;
+            alert?: boolean;
+        };
+        humidity?: {
+            sample: number;
+        };
+    };
+    event?: {
+        timestamp?: string;
+        data?: {
+            rssi?: number;
+        };
+    };
+    analytics?: {
+        coordinates?: {
+            global?: {
+                latitude: number;
+                longitude: number;
+                accuracy?: number;
+            };
+        };
+        location_name?: string;
+        resourceId?: string;
+        meta?: {
+            data?: {
+                task_alarm?: boolean;
+            };
+        };
+    };
+    mac_address?: string;
+    sensor_id?: string;
+    message_id?: string;
 }
 
 export interface ZebraReadingsResponse {
-    sensors_readings: ZebraReading[];
-    cursor?: string;
-    page_response: PageResponse;
+    results: ZebraReading[];
+    total_count: number;
+    nextCursor?: string;
 }
 
 export interface ZebraAlarm {
@@ -42,6 +73,13 @@ export interface SensorStatus {
     signal_strength: number;
     last_seen: string;
     firmware_version?: string;
+    model?: string;
+    hardware_revision?: string;
+    most_recent?: {
+        last_read_time?: string;
+        sensor_task_status?: string;
+        alarm_count?: number;
+    };
 }
 
 export interface SensorListResponse {

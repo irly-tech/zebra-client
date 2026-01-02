@@ -10,11 +10,14 @@ export class SensorsAPI {
     constructor(private client: ZebraClient) { }
 
     async getStatus(serialNumber: string): Promise<SensorStatus> {
+        const url = new URL('devices/environmental-sensors');
+        url.searchParams.set('text_filter', serialNumber);
+
         return this.client.request<SensorStatus>(
             'sensors.getStatus',
-            `environmental/sensors/${serialNumber}`,
+            url.toString(),
             { method: 'GET' },
-            'environmental/sensors/:serialNumber'
+            'devices/environmental-sensors'
         );
     }
 
