@@ -1,6 +1,6 @@
 {
     "name": "@irly-tech/zebra-client",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Zebra API client with retry logic and telemetry support",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -20,8 +20,11 @@
         "README.md"
     ],
     "publishConfig": {
-        "registry": "https://registry.npmjs.org",
         "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/irly-tech/zebra-client"
     },
     "scripts": {
         "build": "rimraf dist && tsc",
