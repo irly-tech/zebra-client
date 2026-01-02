@@ -18,6 +18,9 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout repository
@@ -41,6 +44,9 @@ jobs:
   publish-core:
     needs: build-and-test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     if: >
       github.event_name == 'release' ||
       github.event.inputs.package == 'all' ||
@@ -63,14 +69,29 @@ jobs:
       - name: Build all packages
         run: npm run build
 
-      - name: Publish @irly-tech/zebra-client
+      - name: Publish @irly-tech/zebra-client to npm
         run: npm publish --workspace=packages/core --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@irly-tech'
+
+      - name: Publish @irly-tech/zebra-client to GitHub Packages
+        run: npm publish --workspace=packages/core
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publish-otel:
     needs: build-and-test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     if: >
       github.event_name == 'release' ||
       github.event.inputs.package == 'all' ||
@@ -93,7 +114,19 @@ jobs:
       - name: Build all packages
         run: npm run build
 
-      - name: Publish @irly-tech/zebra-client-otel
+      - name: Publish @irly-tech/zebra-client-otel to npm
         run: npm publish --workspace=packages/otel --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Setup Node.js for GitHub Packages
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://npm.pkg.github.com'
+          scope: '@irly-tech'
+
+      - name: Publish @irly-tech/zebra-client-otel to GitHub Packages
+        run: npm publish --workspace=packages/otel
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

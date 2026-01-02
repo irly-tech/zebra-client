@@ -20,8 +20,11 @@
         "README.md"
     ],
     "publishConfig": {
-        "registry": "https://registry.npmjs.org",
         "access": "public"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/irly-tech/zebra-client"
     },
     "scripts": {
         "build": "rimraf dist && tsc",
