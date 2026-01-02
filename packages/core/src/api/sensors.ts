@@ -10,12 +10,11 @@ export class SensorsAPI {
     constructor(private client: ZebraClient) { }
 
     async getStatus(serialNumber: string): Promise<SensorStatus> {
-        const url = new URL('devices/environmental-sensors');
-        url.searchParams.set('text_filter', serialNumber);
+        const endpoint = `devices/environmental-sensors?text_filter=${encodeURIComponent(serialNumber)}`;
 
         const response = await this.client.request<SensorListResponse>(
             'sensors.getStatus',
-            url.toString(),
+            endpoint,
             { method: 'GET' },
             'devices/environmental-sensors'
         );
@@ -32,13 +31,17 @@ export class SensorsAPI {
     }
 
     async list(options: ListSensorsOptions = {}): Promise<SensorListResponse> {
-        const url = new URL('environmental/sensors');
-        if (options.page !== undefined) url.searchParams.set('page.page', options.page.toString());
-        if (options.pageSize !== undefined) url.searchParams.set('page.size', options.pageSize.toString());
+        const params = new URLSearchParams();
+        if (options.page !== undefined) params.set('page.page', options.page.toString());
+        if (options.pageSize !== undefined) params.set('page.size', options.pageSize.toString());
+
+        const endpoint = params.toString()
+            ? `environmental/sensors?${params.toString()}`
+            : 'environmental/sensors';
 
         return this.client.request<SensorListResponse>(
             'sensors.list',
-            url.toString(),
+            endpoint,
             { method: 'GET' },
             'environmental/sensors'
         );
