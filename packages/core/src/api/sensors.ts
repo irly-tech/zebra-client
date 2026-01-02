@@ -13,12 +13,22 @@ export class SensorsAPI {
         const url = new URL('devices/environmental-sensors');
         url.searchParams.set('text_filter', serialNumber);
 
-        return this.client.request<SensorStatus>(
+        const response = await this.client.request<SensorListResponse>(
             'sensors.getStatus',
             url.toString(),
             { method: 'GET' },
             'devices/environmental-sensors'
         );
+
+        if (!response.sensors || response.sensors.length === 0) {
+            throw new Error(`No sensor found with serial number: ${serialNumber}`);
+        }
+
+        if (response.sensors.length > 1) {
+            console.warn(`Multiple sensors found for serial number ${serialNumber}, returning the first one`);
+        }
+
+        return response.sensors[0];
     }
 
     async list(options: ListSensorsOptions = {}): Promise<SensorListResponse> {
