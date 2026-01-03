@@ -11,17 +11,54 @@ import { GetReadingsLogOptions } from '../api/readings.js';
 import { ListSensorsOptions } from '../api/sensors.js';
 import { ListAlarmsOptions } from '../api/alarms.js';
 
+/**
+ * Represents a recorded method call on the mock client.
+ */
 export interface MockCall {
+    /** Name of the method that was called */
     method: string;
+
+    /** Arguments passed to the method */
     args: any[];
+
+    /** Timestamp when the call was made */
     timestamp: number;
+
+    /** Result returned by the method (if successful) */
     result?: any;
+
+    /** Error thrown by the method (if failed) */
     error?: Error;
 }
 
+/**
+ * Mock implementation of ZebraClient for testing.
+ * Allows configuring responses and verifying method calls.
+ *
+ * @example
+ * ```typescript
+ * const mockClient = new MockZebraClient();
+ *
+ * // Configure a mock response
+ * mockClient.mockResponses.readings.getLog = {
+ *   results: [createMockReading()],
+ *   total_count: 1
+ * };
+ *
+ * // Call the method
+ * const result = await mockClient.readings.getLog({...});
+ *
+ * // Verify it was called
+ * expect(mockClient.wasCalled('readings.getLog')).toBe(true);
+ * ```
+ */
 export class MockZebraClient {
     private _calls: MockCall[] = [];
 
+    /**
+     * Configure mock responses for API methods.
+     * Set to an Error instance to simulate a failure.
+     */
     public mockResponses: {
         readings: {
             getLog?: ZebraReadingsResponse | Error;
@@ -39,22 +76,40 @@ export class MockZebraClient {
             alarms: {},
         };
 
+    /**
+     * Returns all recorded method calls in chronological order.
+     */
     get calls(): readonly MockCall[] {
         return this._calls;
     }
 
+    /**
+     * Returns all calls to a specific method.
+     * @param method - Method name (e.g., 'readings.getLog')
+     */
     getCalls(method: string): MockCall[] {
         return this._calls.filter(c => c.method === method);
     }
 
+    /**
+     * Returns the most recent call to a specific method.
+     * @param method - Method name (e.g., 'readings.getLog')
+     */
     getLastCall(method: string): MockCall | undefined {
         return this.getCalls(method).at(-1);
     }
 
+    /**
+     * Checks if a method was called at least once.
+     * @param method - Method name (e.g., 'readings.getLog')
+     */
     wasCalled(method: string): boolean {
         return this.getCalls(method).length > 0;
     }
 
+    /**
+     * Clears the recorded call history.
+     */
     clearCalls(): void {
         this._calls = [];
     }

@@ -5,13 +5,46 @@ import { ReadingsAPI } from './api/readings.js';
 import { SensorsAPI } from './api/sensors.js';
 import { AlarmsAPI } from './api/alarms.js';
 
+/**
+ * Main client for interacting with the Zebra Electronic Temperature Sensors API.
+ *
+ * @example
+ * ```typescript
+ * const client = new ZebraClient({
+ *   apiKey: 'your-api-key',
+ *   retry: { maxRetries: 3 }
+ * });
+ *
+ * // Get sensor readings
+ * const readings = await client.readings.getLog({
+ *   taskId: 'task-123',
+ *   sensorTaskId: 'sensor-task-456',
+ *   startTime: new Date('2024-01-01')
+ * });
+ * ```
+ */
 export class ZebraClient {
     private readonly config: InternalConfig;
 
+    /**
+     * API for accessing sensor reading logs.
+     */
     public readonly readings: ReadingsAPI;
+
+    /**
+     * API for accessing sensor information and status.
+     */
     public readonly sensors: SensorsAPI;
+
+    /**
+     * API for accessing alarm information.
+     */
     public readonly alarms: AlarmsAPI;
 
+    /**
+     * Creates a new ZebraClient instance.
+     * @param config - Configuration options for the client
+     */
     constructor(config: ZebraClientConfig) {
         this.config = {
             apiKey: config.apiKey,
@@ -32,6 +65,16 @@ export class ZebraClient {
         this.alarms = new AlarmsAPI(this);
     }
 
+    /**
+     * Makes an HTTP request to the Zebra API with automatic retries and telemetry.
+     * @internal
+     * @param operationName - Name of the operation for telemetry tracking
+     * @param endpoint - API endpoint path (relative to baseUrl)
+     * @param options - Fetch request options
+     * @param route - Optional route template for telemetry (e.g., '/tasks/:id')
+     * @returns Promise resolving to the parsed JSON response
+     * @throws {ZebraError} When the API returns an error or after all retries are exhausted
+     */
     async request<T>(
         operationName: string,
         endpoint: string,

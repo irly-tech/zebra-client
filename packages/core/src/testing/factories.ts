@@ -7,6 +7,11 @@ import {
     Task
 } from '../types.js';
 
+/**
+ * Creates a mock readings response for testing.
+ * @param overrides - Optional properties to override default values
+ * @returns A mock ZebraReadingsResponse object
+ */
 export function createMockReadingsResponse(
     overrides: Partial<ZebraReadingsResponse> = {}
 ): ZebraReadingsResponse {
@@ -20,6 +25,11 @@ export function createMockReadingsResponse(
     };
 }
 
+/**
+ * Creates a mock sensor reading for testing.
+ * @param overrides - Optional properties to override default values
+ * @returns A mock ZebraReading object
+ */
 export function createMockReading(
     overrides: Partial<ZebraReading> = {}
 ): ZebraReading {
@@ -59,6 +69,11 @@ export function createMockReading(
     };
 }
 
+/**
+ * Creates a mock sensor status for testing.
+ * @param overrides - Optional properties to override default values
+ * @returns A mock SensorStatus object
+ */
 export function createMockSensorStatus(
     overrides: Partial<SensorStatus> = {}
 ): SensorStatus {
@@ -79,6 +94,11 @@ export function createMockSensorStatus(
     };
 }
 
+/**
+ * Creates a mock alarms response for testing.
+ * @param overrides - Optional properties to override default values
+ * @returns A mock ZebraAlarmsResponse object
+ */
 export function createMockAlarmsResponse(
     overrides: Partial<ZebraAlarmsResponse> = {}
 ): ZebraAlarmsResponse {
@@ -93,6 +113,11 @@ export function createMockAlarmsResponse(
     };
 }
 
+/**
+ * Creates a mock alarm for testing.
+ * @param overrides - Optional properties to override default values
+ * @returns A mock ZebraAlarm object
+ */
 export function createMockAlarm(
     overrides: Partial<ZebraAlarm> = {}
 ): ZebraAlarm {
