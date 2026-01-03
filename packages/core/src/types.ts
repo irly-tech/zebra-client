@@ -89,11 +89,95 @@ export interface SensorListResponse {
 
 export interface Task {
     id: string;
-    sensor_id: string;
-    status: string;
-    created_at: string;
-    thresholds?: {
-        min_temperature?: number;
-        max_temperature?: number;
+    name: string;
+    status: 'TASK_STATUS_ACTIVE' | 'TASK_STATUS_SENSOR_COMPLETED' | 'TASK_STATUS_START_PENDING' | 'TASK_STATUS_STOP_PENDING';
+    sensor_count?: number;
+    alarm_count?: number;
+    started?: string;
+    ended?: string;
+    taskDetails?: TaskDetails;
+}
+
+export interface TaskDetails {
+    name: string;
+    interval: {
+        minutes?: number;
+        seconds?: number;
     };
+    loop_reads?: boolean;
+    sensor_type?: 'SENSOR_TYPE_TEMPERATURE' | 'SENSOR_TYPE_HUMIDITY';
+    alarm_low_temp?: number;
+    alarm_high_temp?: number;
+    low_duration?: {
+        minutes?: number;
+    };
+    high_duration?: {
+        minutes?: number;
+    };
+    notes?: string;
+}
+
+export interface CreateTaskOptions {
+    name: string;
+    intervalMinutes?: number;
+    intervalSeconds?: number;
+    loopReads?: boolean;
+    sensorType?: 'SENSOR_TYPE_TEMPERATURE' | 'SENSOR_TYPE_HUMIDITY';
+    alarmLowTemp?: number;
+    alarmHighTemp?: number;
+    lowDurationMinutes?: number;
+    highDurationMinutes?: number;
+    notes?: string;
+    startImmediately?: boolean;
+}
+
+export interface ListTasksOptions {
+    page?: number;
+    pageSize?: number;
+    status?: string;
+}
+
+export interface TaskListResponse {
+    tasks: Task[];
+    page_response: PageResponse;
+}
+
+export interface AssignSensorsResponse {
+    associated_sensors: Array<{
+        sensor_id: string;
+        sensor_task_id: string;
+        status: string;
+    }>;
+    failed_sensors: Array<{
+        sensor_id: string;
+        failed_sensor_error: string;
+    }>;
+}
+
+export interface ZebraEnvironmentalSensor {
+    id: string;
+    serial_number: string;
+    mac_address: string;
+    battery_level?: number;
+    model?: string;
+    firmware_revision?: string;
+    status?: string;
+    most_recent?: {
+        task_id: string;
+        sensor_task_id: string;
+        sensor_task_status: string;
+        last_read_time: string;
+    };
+}
+
+export interface SensorRegistration {
+    id: string;
+    serial_number: string;
+    mac_address?: string;
+    enrolled_at?: string;
+}
+
+export interface ZSFinderTokenResponse {
+    token: string;
+    expires_at?: string;
 }

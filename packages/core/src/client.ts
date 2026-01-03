@@ -4,6 +4,8 @@ import { RequestContext, RequestResult } from './telemetry/types.js';
 import { ReadingsAPI } from './api/readings.js';
 import { SensorsAPI } from './api/sensors.js';
 import { AlarmsAPI } from './api/alarms.js';
+import { TasksAPI } from './api/tasks.js';
+import { AuthAPI } from './api/auth.js';
 
 export class ZebraClient {
     private readonly config: InternalConfig;
@@ -11,6 +13,8 @@ export class ZebraClient {
     public readonly readings: ReadingsAPI;
     public readonly sensors: SensorsAPI;
     public readonly alarms: AlarmsAPI;
+    public readonly tasks: TasksAPI;
+    public readonly auth: AuthAPI;
 
     constructor(config: ZebraClientConfig) {
         this.config = {
@@ -30,6 +34,8 @@ export class ZebraClient {
         this.readings = new ReadingsAPI(this);
         this.sensors = new SensorsAPI(this);
         this.alarms = new AlarmsAPI(this);
+        this.tasks = new TasksAPI(this);
+        this.auth = new AuthAPI(this);
     }
 
     async request<T>(

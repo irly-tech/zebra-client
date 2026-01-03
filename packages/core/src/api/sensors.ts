@@ -1,9 +1,15 @@
 import { ZebraClient } from '../client.js';
-import { SensorStatus, SensorListResponse } from '../types.js';
+import { SensorStatus, SensorListResponse, SensorRegistration, ZebraEnvironmentalSensor } from '../types.js';
 
 export interface ListSensorsOptions {
     page?: number;
     pageSize?: number;
+}
+
+export interface ListEnvironmentalSensorsOptions {
+    page?: number;
+    pageSize?: number;
+    textFilter?: string;
 }
 
 export class SensorsAPI {
@@ -44,6 +50,58 @@ export class SensorsAPI {
             endpoint,
             { method: 'GET' },
             'environmental/sensors'
+        );
+    }
+
+    async register(serialNumber: string): Promise<SensorRegistration> {
+        const body = {
+            serial_number: serialNumber,
+        };
+
+        return this.client.request<SensorRegistration>(
+            'sensors.register',
+            'devices/sensor-enrollments',
+            {
+                method: 'POST',
+                body: JSON.stringify(body),
+            },
+            'devices/sensor-enrollments'
+        );
+    }
+
+    async unregister(serialNumber: string): Promise<void> {
+        await this.client.request<void>(
+            'sensors.unregister',
+            `devices/sensor-enrollments/${serialNumber}`,
+            { method: 'DELETE' },
+            'devices/sensor-enrollments/:serialNumber'
+        );
+    }
+
+    async listEnrolled(options: ListEnvironmentalSensorsOptions = {}): Promise<{ sensors: ZebraEnvironmentalSensor[] }> {
+        const params = new URLSearchParams();
+        if (options.page !== undefined) params.set('page.page', options.page.toString());
+        if (options.pageSize !== undefined) params.set('page.size', options.pageSize.toString());
+        if (options.textFilter) params.set('text_filter', options.textFilter);
+
+        const endpoint = params.toString()
+            ? `devices/environmental-sensors?${params.toString()}`
+            : 'devices/environmental-sensors';
+
+        return this.client.request<{ sensors: ZebraEnvironmentalSensor[] }>(
+            'sensors.listEnrolled',
+            endpoint,
+            { method: 'GET' },
+            'devices/environmental-sensors'
+        );
+    }
+
+    async triggerRead(sensorId: string): Promise<void> {
+        await this.client.request<void>(
+            'sensors.triggerRead',
+            `devices/environmental-sensors/${sensorId}/readings`,
+            { method: 'POST' },
+            'devices/environmental-sensors/:sensorId/readings'
         );
     }
 }
