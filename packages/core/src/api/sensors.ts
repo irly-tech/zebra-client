@@ -37,7 +37,7 @@ export class SensorsAPI {
      * @throws {Error} If no sensor is found with the given serial number.
      */
     async getStatus(serialNumber: string): Promise<SensorStatus> {
-        const endpoint = `devices/environmental-sensors?text_filter=${encodeURIComponent(serialNumber)}`;
+        const endpoint = `devices/environmental-sensors?text_filter=${encodeURIComponent(serialNumber)}&size=1`;
 
         const response = await this.client.request<SensorListResponse>(
             'sensors.getStatus',

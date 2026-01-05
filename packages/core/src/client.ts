@@ -95,7 +95,11 @@ export class ZebraClient {
             }
 
             try {
-                const url = new URL(endpoint, this.config.baseUrl).toString();
+                const baseUrlStr = this.config.baseUrl.endsWith('/')
+                    ? this.config.baseUrl
+                    : `${this.config.baseUrl}/`;
+                const url = new URL(endpoint, baseUrlStr).toString();
+                console.log(`[DEBUG] Final URL: ${url}`);
                 const response = await this.config.fetch(url, {
                     ...options,
                     headers: {
