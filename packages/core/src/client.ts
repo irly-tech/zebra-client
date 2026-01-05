@@ -117,7 +117,13 @@ export class ZebraClient {
                         retryCount: attempt,
                     };
                     this.config.telemetryProvider.onRequestEnd(context, result);
-                    return (await response.json()) as T;
+
+                    if (response.status === 204) {
+                        return null as T;
+                    }
+
+                    const text = await response.text();
+                    return text ? (JSON.parse(text) as T) : (null as T);
                 }
 
                 if (response.status === 429) {
