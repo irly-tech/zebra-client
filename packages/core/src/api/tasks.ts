@@ -8,9 +8,18 @@ import {
     ListTasksOptions,
 } from '../types.js';
 
+/**
+ * API for managing environmental monitoring tasks and sensor assignments.
+ */
 export class TasksAPI {
     constructor(private client: ZebraClient) { }
 
+    /**
+     * Creates a new environmental monitoring task.
+     *
+     * @param options - Configuration options for the new task.
+     * @returns A promise that resolves to the created task.
+     */
     async create(options: CreateTaskOptions): Promise<Task> {
         const body = {
             name: options.name,
@@ -40,6 +49,12 @@ export class TasksAPI {
         );
     }
 
+    /**
+     * Retrieves the details of a specific task.
+     *
+     * @param taskId - The unique identifier of the task.
+     * @returns A promise that resolves to the task details.
+     */
     async get(taskId: string): Promise<Task> {
         return this.client.request<Task>(
             'tasks.get',
@@ -49,6 +64,12 @@ export class TasksAPI {
         );
     }
 
+    /**
+     * Lists environmental tasks with optional filtering and pagination.
+     *
+     * @param options - Filtering and pagination options.
+     * @returns A promise that resolves to the task list response.
+     */
     async list(options: ListTasksOptions = {}): Promise<TaskListResponse> {
         const params = new URLSearchParams();
         if (options.page !== undefined) params.set('page.page', options.page.toString());
@@ -67,6 +88,12 @@ export class TasksAPI {
         );
     }
 
+    /**
+     * Stops an active monitoring task.
+     *
+     * @param taskId - The unique identifier of the task to stop.
+     * @returns A promise that resolves when the task is stopped.
+     */
     async stop(taskId: string): Promise<void> {
         await this.client.request<void>(
             'tasks.stop',
@@ -76,6 +103,12 @@ export class TasksAPI {
         );
     }
 
+    /**
+     * Deletes a monitoring task.
+     *
+     * @param taskId - The unique identifier of the task to delete.
+     * @returns A promise that resolves when the task is deleted.
+     */
     async delete(taskId: string): Promise<void> {
         await this.client.request<void>(
             'tasks.delete',
@@ -85,6 +118,13 @@ export class TasksAPI {
         );
     }
 
+    /**
+     * Assigns one or more sensors to a specific monitoring task.
+     *
+     * @param taskId - The unique identifier of the task.
+     * @param sensorIds - Array of sensor IDs to assign.
+     * @returns A promise that resolves to the sensor assignment response.
+     */
     async assignSensors(taskId: string, sensorIds: string[]): Promise<AssignSensorsResponse> {
         const body = {
             sensor_ids: sensorIds,

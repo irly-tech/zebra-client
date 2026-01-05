@@ -1,20 +1,41 @@
 import { ZebraClient } from '../client.js';
 import { SensorStatus, SensorListResponse, SensorRegistration, ZebraEnvironmentalSensor } from '../types.js';
 
+/**
+ * Options for listing available sensors.
+ */
 export interface ListSensorsOptions {
+    /** Page number to retrieve (starts at 1). */
     page?: number;
+    /** Number of sensors per page. */
     pageSize?: number;
 }
 
+/**
+ * Options for listing enrolled environmental sensors with filtering.
+ */
 export interface ListEnvironmentalSensorsOptions {
+    /** Page number to retrieve (starts at 1). */
     page?: number;
+    /** Number of sensors per page. */
     pageSize?: number;
+    /** Text filter for sensor names or serial numbers. */
     textFilter?: string;
 }
 
+/**
+ * API for managing and retrieving information about environmental sensors.
+ */
 export class SensorsAPI {
     constructor(private client: ZebraClient) { }
 
+    /**
+     * Retrieves the current status of a specific sensor by its serial number.
+     *
+     * @param serialNumber - The unique serial number of the sensor.
+     * @returns A promise that resolves to the sensor status.
+     * @throws {Error} If no sensor is found with the given serial number.
+     */
     async getStatus(serialNumber: string): Promise<SensorStatus> {
         const endpoint = `devices/environmental-sensors?text_filter=${encodeURIComponent(serialNumber)}`;
 
@@ -36,6 +57,12 @@ export class SensorsAPI {
         return response.sensors[0];
     }
 
+    /**
+     * Lists all environmental sensors.
+     *
+     * @param options - Pagination options.
+     * @returns A promise that resolves to the sensor list response.
+     */
     async list(options: ListSensorsOptions = {}): Promise<SensorListResponse> {
         const params = new URLSearchParams();
         if (options.page !== undefined) params.set('page.page', options.page.toString());
@@ -53,6 +80,12 @@ export class SensorsAPI {
         );
     }
 
+    /**
+     * Enrolls a new sensor into the system using its serial number.
+     *
+     * @param serialNumber - The serial number of the sensor to register.
+     * @returns A promise that resolves to the registration details.
+     */
     async register(serialNumber: string): Promise<SensorRegistration> {
         const body = {
             serial_number: serialNumber,
@@ -69,6 +102,12 @@ export class SensorsAPI {
         );
     }
 
+    /**
+     * Unenrolls a sensor from the system.
+     *
+     * @param serialNumber - The serial number of the sensor to unregister.
+     * @returns A promise that resolves when the sensor is unregistered.
+     */
     async unregister(serialNumber: string): Promise<void> {
         await this.client.request<void>(
             'sensors.unregister',
@@ -78,6 +117,12 @@ export class SensorsAPI {
         );
     }
 
+    /**
+     * Lists all currently enrolled environmental sensors.
+     *
+     * @param options - Filtering and pagination options.
+     * @returns A promise that resolves to the list of enrolled sensors.
+     */
     async listEnrolled(options: ListEnvironmentalSensorsOptions = {}): Promise<{ sensors: ZebraEnvironmentalSensor[] }> {
         const params = new URLSearchParams();
         if (options.page !== undefined) params.set('page.page', options.page.toString());
@@ -96,6 +141,12 @@ export class SensorsAPI {
         );
     }
 
+    /**
+     * Manually triggers a reading from a specific sensor.
+     *
+     * @param sensorId - The internal ID of the sensor.
+     * @returns A promise that resolves when the read is triggered.
+     */
     async triggerRead(sensorId: string): Promise<void> {
         await this.client.request<void>(
             'sensors.triggerRead',
