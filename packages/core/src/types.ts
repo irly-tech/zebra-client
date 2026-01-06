@@ -130,33 +130,78 @@ export interface PageResponse {
  * Current status and health information for a sensor.
  */
 export interface SensorStatus {
+    /** Unique internal identifier for the sensor. */
+    id: string;
     /** Unique serial number of the sensor. */
     serial_number: string;
-    /** Current battery level (percentage). */
-    battery_level: number;
-    /** Current signal strength (RSSI). */
-    signal_strength: number;
-    /** ISO 8601 timestamp of the last time the sensor was seen. */
-    last_seen: string;
-    /** Firmware version installed on the sensor. */
-    firmware_version?: string;
+    /** MAC address of the sensor. */
+    mac_address?: string;
+    /** Human-readable name of the sensor. */
+    name?: string;
     /** Hardware model name/number. */
     model?: string;
+    /** Manufacturer of the sensor. */
+    manufacturer?: string;
+    /** Firmware revision version. */
+    firmware_revision?: string;
     /** Hardware revision version. */
     hardware_revision?: string;
+    /** Current battery level (percentage). */
+    battery_level?: number;
+    /** Additional info about the sensor. */
+    additional_info?: string;
+    /** Current operational status of the sensor. */
+    status?: 'SENSOR_STATUS_ACTIVE' | 'SENSOR_STATUS_ACTIVE_WITH_ALARM' | 'SENSOR_STATUS_STOPPED';
+    /** Number of alarms recorded for the sensor. */
+    alarm_count?: number;
+    /** ISO 8601 timestamp of when the sensor was first seen (registration date). */
+    first_seen?: string;
+    /** ISO 8601 timestamp of last activity. */
+    last_updated?: string;
+    /** Additional notes for the sensor. */
+    notes?: string;
+    /** URL of the sensor's certificate document. */
+    certificate_url?: string;
+    /** Type of the sensor's certificate. */
+    certificate_type?: 'CERTIFICATE_TYPE_CONFORMANCE' | 'CERTIFICATE_TYPE_CALIBRATION';
+
+    /** legacy/compat field: uses firmware_revision */
+    firmware_version?: string;
+    /** legacy/compat field: signal strength is not in main list response */
+    signal_strength?: number;
+    /** legacy/compat field: maps to last_updated or first_seen? */
+    last_seen?: string;
+
     /** Information about the most recent activity. */
     most_recent?: {
+        /** Identifier of the assigned task. */
+        task_id?: string;
+        /** Identifier of the sensor-task mapping. */
+        sensor_task_id?: string;
+        /** Current status of the sensor task. */
+        sensor_task_status?: 'SENSOR_TASK_STATUS_START_PENDING' | 'SENSOR_TASK_STATUS_ACTIVE' | 'SENSOR_TASK_STATUS_ACTIVE_WITH_ALARM' | 'SENSOR_TASK_STATUS_COMPLETED' | 'SENSOR_TASK_STATUS_STOP_PENDING';
         /** ISO 8601 timestamp of the last reading. */
         last_read_time?: string;
-        /** The value of the last reading (e.g., temperature sample). */
+
+        /** legacy/compat fields */
         last_read_value?: number;
-        /** Current task status of the sensor. */
-        sensor_task_status?: string;
-        /** Number of alarms currently active for this sensor. */
         alarm_count?: number;
     };
-    /** Operational status of the sensor (e.g., "ENROLLED"). */
-    status?: string;
+
+    /** The requested task which the sensor has been associated with, if any. */
+    requested?: {
+        task_id?: string;
+        sensor_task_id?: string;
+        sensor_task_status?: string;
+        last_read_time?: string;
+    };
+
+    /** Last temperature, date, time and alarm of the advertising packet. */
+    unverified?: {
+        last_date_time?: string;
+        last_temperature?: number;
+        last_alarm?: boolean;
+    };
 }
 
 /**
@@ -318,34 +363,9 @@ export interface AssignSensorsResponse {
 
 /**
  * Represents an environmental sensor within the Zebra system.
+ * @deprecated Use SensorStatus instead.
  */
-export interface ZebraEnvironmentalSensor {
-    /** Unique internal identifier for the sensor. */
-    id: string;
-    /** Unique serial number of the sensor. */
-    serial_number: string;
-    /** MAC address of the sensor. */
-    mac_address: string;
-    /** Current battery level (percentage). */
-    battery_level?: number;
-    /** Sensor hardware model. */
-    model?: string;
-    /** Sensor firmware revision. */
-    firmware_revision?: string;
-    /** Current operational status of the sensor. */
-    status?: string;
-    /** Information about the sensor's current or last active task. */
-    most_recent?: {
-        /** Identifier of the assigned task. */
-        task_id: string;
-        /** Identifier of the sensor-task mapping. */
-        sensor_task_id: string;
-        /** Current status of the task for this specific sensor. */
-        sensor_task_status: string;
-        /** ISO 8601 timestamp of the last recorded reading. */
-        last_read_time: string;
-    };
-}
+export type ZebraEnvironmentalSensor = SensorStatus;
 
 /**
  * Details of a sensor's registration (enrollment) in the system.

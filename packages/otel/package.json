@@ -1,6 +1,6 @@
 {
     "name": "@irly-tech/zebra-client-otel",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "description": "OpenTelemetry extension for @irly-tech/zebra-client",
     "main": "./dist/index.js",
     "types": "./dist/index.d.ts",
@@ -30,11 +30,11 @@
     "author": "irly-tech",
     "license": "UNLICENSED",
     "peerDependencies": {
-        "@irly-tech/zebra-client": "^0.3.1",
+        "@irly-tech/zebra-client": "^0.3.2",
         "@opentelemetry/api": "^1.7.0"
     },
     "devDependencies": {
-        "@irly-tech/zebra-client": "^0.3.1",
+        "@irly-tech/zebra-client": "^0.3.2",
         "@opentelemetry/api": "^1.7.0",
         "@types/node": "^20.11.0",
         "rimraf": "^5.0.5",
