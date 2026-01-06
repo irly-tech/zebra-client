@@ -6,6 +6,7 @@ import { SensorsAPI } from './api/sensors.js';
 import { AlarmsAPI } from './api/alarms.js';
 import { TasksAPI } from './api/tasks.js';
 import { AuthAPI } from './api/auth.js';
+import { WebhooksAPI } from './api/webhooks.js';
 
 /**
  * The main client for interacting with the Zebra Savannah APIs.
@@ -26,6 +27,8 @@ export class ZebraClient {
     public readonly tasks: TasksAPI;
     /** Access to the Authentication API. */
     public readonly auth: AuthAPI;
+    /** Access to the Webhook Subscription API. */
+    public readonly webhooks: WebhooksAPI;
 
     /**
      * Initializes a new Zebra API client.
@@ -51,6 +54,7 @@ export class ZebraClient {
         this.alarms = new AlarmsAPI(this);
         this.tasks = new TasksAPI(this);
         this.auth = new AuthAPI(this);
+        this.webhooks = new WebhooksAPI(this);
     }
 
     /**

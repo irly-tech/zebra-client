@@ -39,10 +39,13 @@ describe('TasksAPI', () => {
         const result = await client.tasks.create(taskOptions);
 
         assert.deepStrictEqual(result, mockTask);
-        assert.strictEqual(capturedBody.name, 'Cold Storage Monitor');
-        assert.deepStrictEqual(capturedBody.interval, { minutes: 5 });
-        assert.strictEqual(capturedBody.alarm_low_temp, 2.0);
-        assert.strictEqual(capturedBody.alarm_high_temp, 8.0);
+        const details = capturedBody.task_from_details.task_details;
+        assert.strictEqual(details.name, 'Cold Storage Monitor');
+        assert.strictEqual(details.interval_minutes, 5);
+        assert.strictEqual(details.alarm_low_temp, 2.0);
+        assert.strictEqual(details.alarm_high_temp, 8.0);
+        assert.strictEqual(details.low_duration_minutes, 2);
+        assert.deepStrictEqual(details.start_immediately, {});
     });
 
     test('get should retrieve task by ID', async () => {
@@ -201,5 +204,33 @@ describe('TasksAPI', () => {
         assert.strictEqual(result.associated_sensors.length, 1);
         assert.strictEqual(result.failed_sensors.length, 1);
         assert.strictEqual(result.failed_sensors[0].failed_sensor_error, 'Sensor not found');
+    });
+
+    test('assignAssets should associate assets with task', async () => {
+        const mockResponse = [
+            {
+                asset_id: 'asset-1',
+                status: 'ASSOCIATED',
+            },
+        ];
+
+        let capturedBody: any;
+
+        const mockFetch = async (url: string, options: any) => {
+            assert.ok(url.includes('environmental/tasks/task-123/assets'));
+            assert.strictEqual(options.method, 'POST');
+            capturedBody = JSON.parse(options.body);
+            return new Response(JSON.stringify(mockResponse), { status: 200 });
+        };
+
+        const client = new ZebraClient({
+            apiKey: 'test-key',
+            fetch: mockFetch as any,
+        });
+
+        const result = await client.tasks.assignAssets('task-123', ['asset-1']);
+
+        assert.deepStrictEqual(result, mockResponse);
+        assert.deepStrictEqual(capturedBody.asset_ids, ['asset-1']);
     });
 });

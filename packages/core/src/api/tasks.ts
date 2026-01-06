@@ -22,20 +22,22 @@ export class TasksAPI {
      */
     async create(options: CreateTaskOptions): Promise<Task> {
         const body = {
-            name: options.name,
-            interval: options.intervalMinutes
-                ? { minutes: options.intervalMinutes }
-                : options.intervalSeconds
-                    ? { seconds: options.intervalSeconds }
-                    : { minutes: 5 },
-            loop_reads: options.loopReads ?? true,
-            sensor_type: options.sensorType || 'SENSOR_TYPE_TEMPERATURE',
-            alarm_low_temp: options.alarmLowTemp,
-            alarm_high_temp: options.alarmHighTemp,
-            low_duration: options.lowDurationMinutes ? { minutes: options.lowDurationMinutes } : undefined,
-            high_duration: options.highDurationMinutes ? { minutes: options.highDurationMinutes } : undefined,
-            notes: options.notes,
-            start_immediately: options.startImmediately ?? true,
+            task_from_details: {
+                task_details: {
+                    name: options.name,
+                    interval_minutes: options.intervalMinutes ?? 5,
+                    interval_seconds: options.intervalSeconds,
+                    loop_reads: options.loopReads ?? true,
+                    sensor_type: options.sensorType || 'SENSOR_TYPE_TEMPERATURE',
+                    alarm_low_temp: options.alarmLowTemp,
+                    alarm_high_temp: options.alarmHighTemp,
+                    low_duration_minutes: options.lowDurationMinutes,
+                    high_duration_minutes: options.highDurationMinutes,
+                    notes: options.notes,
+                    start_immediately: options.startImmediately !== false ? {} : undefined,
+                    required_sensors: options.requiredSensors,
+                },
+            },
         };
 
         return this.client.request<Task>(
@@ -138,6 +140,29 @@ export class TasksAPI {
                 body: JSON.stringify(body),
             },
             'environmental/tasks/:taskId/sensors'
+        );
+    }
+
+    /**
+     * Associates assets with a specific monitoring task.
+     *
+     * @param taskId - The unique identifier of the task.
+     * @param assetIds - Array of asset IDs to associate.
+     * @returns A promise that resolves to the asset assignment response.
+     */
+    async assignAssets(taskId: string, assetIds: string[]): Promise<import('../types.js').AssetAssignment[]> {
+        const body = {
+            asset_ids: assetIds,
+        };
+
+        return this.client.request<import('../types.js').AssetAssignment[]>(
+            'tasks.assignAssets',
+            `environmental/tasks/${taskId}/assets`,
+            {
+                method: 'POST',
+                body: JSON.stringify(body),
+            },
+            'environmental/tasks/:taskId/assets'
         );
     }
 }

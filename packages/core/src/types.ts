@@ -148,11 +148,15 @@ export interface SensorStatus {
     most_recent?: {
         /** ISO 8601 timestamp of the last reading. */
         last_read_time?: string;
+        /** The value of the last reading (e.g., temperature sample). */
+        last_read_value?: number;
         /** Current task status of the sensor. */
         sensor_task_status?: string;
         /** Number of alarms currently active for this sensor. */
         alarm_count?: number;
     };
+    /** Operational status of the sensor (e.g., "ENROLLED"). */
+    status?: string;
 }
 
 /**
@@ -185,6 +189,8 @@ export interface Task {
     ended?: string;
     /** Detailed configuration for the task. */
     taskDetails?: TaskDetails;
+    /** Number of sensors required for this task. */
+    required_sensors?: number;
 }
 
 /**
@@ -220,6 +226,20 @@ export interface TaskDetails {
     };
     /** Optional notes or description for the task. */
     notes?: string;
+    /** Minimum duration a low temperature must persist before triggering an alarm (in minutes). */
+    low_duration_minutes?: number;
+    /** Minimum duration a high temperature must persist before triggering an alarm (in minutes). */
+    high_duration_minutes?: number;
+    /** Minimum duration a low temperature must persist before triggering an alarm (in seconds). */
+    low_duration_seconds?: number;
+    /** Minimum duration a high temperature must persist before triggering an alarm (in seconds). */
+    high_duration_seconds?: number;
+    /** Frequency at which readings should be taken (in minutes). */
+    interval_minutes?: number;
+    /** Frequency at which readings should be taken (in seconds). */
+    interval_seconds?: number;
+    /** Number of sensors required for this task. */
+    required_sensors?: number;
 }
 
 /**
@@ -248,6 +268,8 @@ export interface CreateTaskOptions {
     notes?: string;
     /** Whether to start the task immediately upon creation (default: true). */
     startImmediately?: boolean;
+    /** Number of sensors required for this task. */
+    requiredSensors?: number;
 }
 
 /**
@@ -347,4 +369,52 @@ export interface ZSFinderTokenResponse {
     token: string;
     /** ISO 8601 timestamp of when the token expires. */
     expires_at?: string;
+}
+
+/**
+ * Options for creating a new webhook subscription.
+ */
+export interface CreateWebhookSubscriptionOptions {
+    /** The destination URL for callbacks. */
+    webhookUrl: string;
+    /** A friendly name for the subscription. */
+    name?: string;
+    /** Custom headers to be sent with the webhook. */
+    headers?: Record<string, string>;
+    /** Optional task IDs to filter events. */
+    taskIds?: string[];
+    /** Optional EPCs (Electronic Product Codes) to filter events. */
+    epcis?: string[];
+}
+
+/**
+ * Details of a webhook subscription.
+ */
+export interface WebhookSubscription {
+    /** Unique identifier for the subscription. */
+    id: string;
+    /** The destination URL for callbacks. */
+    webhookUrl: string;
+    /** A friendly name for the subscription. */
+    name: string;
+    /** Current status of the subscription. */
+    status: 'ACTIVE' | 'STOPPED';
+    /** Custom headers sent with the webhook. */
+    headers?: Record<string, string>;
+    /** Task IDs used for filtering. */
+    taskIds?: string[];
+    /** EPCs used for filtering. */
+    epcis?: string[];
+}
+
+/**
+ * Result of associating an asset with a task.
+ */
+export interface AssetAssignment {
+    /** Unique identifier for the asset. */
+    asset_id: string;
+    /** External ID for the asset. */
+    external_id?: string;
+    /** Status of the assignment. */
+    status: string;
 }
