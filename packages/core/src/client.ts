@@ -4,14 +4,36 @@ import { RequestContext, RequestResult } from './telemetry/types.js';
 import { ReadingsAPI } from './api/readings.js';
 import { SensorsAPI } from './api/sensors.js';
 import { AlarmsAPI } from './api/alarms.js';
+import { TasksAPI } from './api/tasks.js';
+import { AuthAPI } from './api/auth.js';
+import { WebhooksAPI } from './api/webhooks.js';
 
+/**
+ * The main client for interacting with the Zebra Savannah APIs.
+ *
+ * This client provides access to various API modules for environmental sensor monitoring,
+ * including readings, sensors, alarms, tasks, and authentication.
+ */
 export class ZebraClient {
     private readonly config: InternalConfig;
 
+    /** Access to the Environmental Readings API. */
     public readonly readings: ReadingsAPI;
+    /** Access to the Sensors Management API. */
     public readonly sensors: SensorsAPI;
+    /** Access to the Alarms API. */
     public readonly alarms: AlarmsAPI;
+    /** Access to the Environmental Tasks API. */
+    public readonly tasks: TasksAPI;
+    /** Access to the Authentication API. */
+    public readonly auth: AuthAPI;
+    /** Access to the Webhook Subscription API. */
+    public readonly webhooks: WebhooksAPI;
 
+    /**
+     * Initializes a new Zebra API client.
+     * @param config - Configuration options for the client.
+     */
     constructor(config: ZebraClientConfig) {
         this.config = {
             apiKey: config.apiKey,
@@ -30,8 +52,23 @@ export class ZebraClient {
         this.readings = new ReadingsAPI(this);
         this.sensors = new SensorsAPI(this);
         this.alarms = new AlarmsAPI(this);
+        this.tasks = new TasksAPI(this);
+        this.auth = new AuthAPI(this);
+        this.webhooks = new WebhooksAPI(this);
     }
 
+    /**
+     * Performs a low-level request to the Zebra API with retry logic and telemetry.
+     *
+     * @template T - The expected response type.
+     * @param operationName - Name of the operation for telemetry purposes (e.g., 'tasks.create').
+     * @param endpoint - The API endpoint (relative to the base URL or absolute).
+     * @param options - Standard Fetch API RequestInit options.
+     * @param route - Optional parameterized route (e.g., 'tasks/:id') for better telemetry aggregation.
+     * @returns A promise that resolves to the API response object.
+     * @throws {ZebraError} If the API returns an error status code and retries are exhausted.
+     * @throws {Error} If a network or other low-level error occurs.
+     */
     async request<T>(
         operationName: string,
         endpoint: string,
@@ -62,7 +99,11 @@ export class ZebraClient {
             }
 
             try {
-                const url = new URL(endpoint, this.config.baseUrl).toString();
+                const baseUrlStr = this.config.baseUrl.endsWith('/')
+                    ? this.config.baseUrl
+                    : `${this.config.baseUrl}/`;
+                const url = new URL(endpoint, baseUrlStr).toString();
+                console.log(`[DEBUG] Final URL: ${url}`);
                 const response = await this.config.fetch(url, {
                     ...options,
                     headers: {
@@ -84,7 +125,13 @@ export class ZebraClient {
                         retryCount: attempt,
                     };
                     this.config.telemetryProvider.onRequestEnd(context, result);
-                    return (await response.json()) as T;
+
+                    if (response.status === 204) {
+                        return null as T;
+                    }
+
+                    const text = await response.text();
+                    return text ? (JSON.parse(text) as T) : (null as T);
                 }
 
                 if (response.status === 429) {

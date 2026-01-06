@@ -1,33 +1,85 @@
 import { TelemetryProvider } from './telemetry/types.js';
 
+/**
+ * Configuration options for the Zebra API client.
+ */
 export interface ZebraClientConfig {
+    /**
+     * Your Zebra API key.
+     */
     apiKey: string;
+
+    /**
+     * Base URL for the Zebra API.
+     * @default 'https://api.zebra.com/v2'
+     */
     baseUrl?: string;
 
-    // Retry configuration
+    /**
+     * Retry configuration for failed requests.
+     */
     retry?: {
-        maxRetries?: number;        // default: 3
-        initialDelayMs?: number;    // default: 1000
-        maxDelayMs?: number;        // default: 30000
-        backoffMultiplier?: number; // default: 2
+        /**
+         * Maximum number of retry attempts.
+         * @default 3
+         */
+        maxRetries?: number;
+        /**
+         * Initial delay before the first retry in milliseconds.
+         * @default 1000
+         */
+        initialDelayMs?: number;
+        /**
+         * Maximum delay between retries in milliseconds.
+         * @default 30000
+         */
+        maxDelayMs?: number;
+        /**
+         * Multiplier for exponential backoff.
+         * @default 2
+         */
+        backoffMultiplier?: number;
     };
 
-    // Rate limiting (optional client-side throttling)
+    /**
+     * Optional client-side rate limiting (throttling).
+     */
     rateLimit?: {
+        /**
+         * Maximum number of requests allowed per second.
+         */
         requestsPerSecond?: number;
     };
 
-    // Telemetry (optional - defaults to NoopProvider)
+    /**
+     * Optional provider for telemetry/observability.
+     * Defaults to a NoopProvider if not specified.
+     */
     telemetryProvider?: TelemetryProvider;
 
-    // Request timeout
-    timeoutMs?: number;           // default: 30000
+    /**
+     * Request timeout in milliseconds.
+     * @default 30000
+     */
+    timeoutMs?: number;
 
-    // Custom fetch implementation
+    /**
+     * Custom fetch implementation.
+     * Useful for testing or environments without a global fetch.
+     */
     fetch?: typeof fetch;
 }
 
+/**
+ * Custom error class for Zebra API related errors.
+ */
 export class ZebraError extends Error {
+    /**
+     * Creates a new ZebraError.
+     * @param message - The error message.
+     * @param statusCode - The HTTP status code returned by the API, if available.
+     * @param response - The raw Response object, if available.
+     */
     constructor(
         message: string,
         public statusCode?: number,
@@ -38,6 +90,10 @@ export class ZebraError extends Error {
     }
 }
 
+/**
+ * Internal configuration used by the client, with all optional fields resolved to defaults.
+ * @internal
+ */
 export interface InternalConfig {
     apiKey: string;
     baseUrl: string;

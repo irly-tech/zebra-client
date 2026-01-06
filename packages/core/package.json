@@ -28,7 +28,8 @@
     },
     "scripts": {
         "build": "rimraf dist && tsc",
-        "test": "node --import tsx --test $(find src -name '*.test.ts')"
+        "test": "node --import tsx --test $(find src -name '*.test.ts')",
+        "harness": "tsx src/bin/harness.ts"
     },
     "keywords": [
         "zebra",
