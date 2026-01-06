@@ -63,6 +63,7 @@ export function createMockSensorStatus(
     overrides: Partial<SensorStatus> = {}
 ): SensorStatus {
     return {
+        id: `sensor-${Date.now()}`,
         serial_number: 'ZEB-001',
         battery_level: 95,
         signal_strength: -45,
@@ -72,7 +73,7 @@ export function createMockSensorStatus(
         hardware_revision: 'v1',
         most_recent: {
             last_read_time: new Date().toISOString(),
-            sensor_task_status: 'ACTIVE',
+            sensor_task_status: 'SENSOR_TASK_STATUS_ACTIVE',
             alarm_count: 0,
         },
         ...overrides,

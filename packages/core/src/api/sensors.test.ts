@@ -6,6 +6,7 @@ import { SensorStatus, SensorListResponse } from '../types.js';
 describe('SensorsAPI', () => {
     test('getStatus should return sensor when single match found', async () => {
         const mockSensor: SensorStatus = {
+            id: 'sensor-123',
             serial_number: 'SN12345',
             battery_level: 85,
             signal_strength: -60,
@@ -65,6 +66,7 @@ describe('SensorsAPI', () => {
 
     test('getStatus should return first sensor when multiple matches found', async () => {
         const mockSensor1: SensorStatus = {
+            id: 'sensor-1',
             serial_number: 'SN12345',
             battery_level: 85,
             signal_strength: -60,
@@ -72,6 +74,7 @@ describe('SensorsAPI', () => {
         };
 
         const mockSensor2: SensorStatus = {
+            id: 'sensor-2',
             serial_number: 'SN12345-DUPLICATE',
             battery_level: 70,
             signal_strength: -70,
@@ -105,6 +108,7 @@ describe('SensorsAPI', () => {
 
         const mockResponse: SensorListResponse = {
             sensors: [{
+                id: 'sensor-test',
                 serial_number: 'TEST',
                 battery_level: 100,
                 signal_strength: -50,
