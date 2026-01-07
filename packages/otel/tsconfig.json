@@ -7,7 +7,7 @@
         "moduleResolution": "NodeNext"
     },
     "include": [
-        "src"
+        "src/**/*.ts"
     ],
     "references": [
         {

@@ -1,6 +1,7 @@
 {
     "name": "@irly-tech/zebra-client-otel",
     "version": "0.3.3",
+    "type": "module",
     "description": "OpenTelemetry extension for @irly-tech/zebra-client",
     "main": "./dist/index.cjs",
     "module": "./dist/index.js",
