@@ -1,10 +1,17 @@
 {
     "name": "@irly-tech/zebra-client-otel",
-    "version": "0.3.2",
+    "version": "0.3.3",
     "description": "OpenTelemetry extension for @irly-tech/zebra-client",
-    "main": "./dist/index.js",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
     "types": "./dist/index.d.ts",
-    "type": "module",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
     "files": [
         "dist",
         "README.md"
@@ -17,7 +24,7 @@
         "url": "https://github.com/irly-tech/zebra-client"
     },
     "scripts": {
-        "build": "rimraf dist && tsc",
+        "build": "tsup",
         "test": "node --import tsx --test $(find src -name '*.test.ts')"
     },
     "keywords": [
