@@ -38,11 +38,11 @@
     "author": "irly-tech",
     "license": "UNLICENSED",
     "peerDependencies": {
-        "@irly-tech/zebra-client": "^0.3.2",
+        "@irly-tech/zebra-client": "^0.3.3",
         "@opentelemetry/api": "^1.7.0"
     },
     "devDependencies": {
-        "@irly-tech/zebra-client": "^0.3.2",
+        "@irly-tech/zebra-client": "^0.3.3",
         "@opentelemetry/api": "^1.7.0",
         "@types/node": "^20.11.0",
         "rimraf": "^5.0.5",
