@@ -1,18 +1,21 @@
 {
     "name": "@irly-tech/zebra-client",
-    "version": "0.3.2",
-    "description": "Zebra API client with retry logic and telemetry support",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "version": "0.3.3",
     "type": "module",
+    "description": "Zebra API client with retry logic and telemetry support",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
-            "import": "./dist/index.js"
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
         },
         "./testing": {
             "types": "./dist/testing/index.d.ts",
-            "import": "./dist/testing/index.js"
+            "import": "./dist/testing/index.js",
+            "require": "./dist/testing/index.cjs"
         }
     },
     "files": [
@@ -27,7 +30,7 @@
         "url": "https://github.com/irly-tech/zebra-client"
     },
     "scripts": {
-        "build": "rimraf dist && tsc",
+        "build": "tsup",
         "test": "node --import tsx --test $(find src -name '*.test.ts')",
         "harness": "tsx src/bin/harness.ts"
     },

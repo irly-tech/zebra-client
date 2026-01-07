@@ -9,22 +9,12 @@
         "declaration": true,
         "declarationMap": true,
         "sourceMap": true,
-        "composite": true,
         "strict": true,
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
         "outDir": "dist"
     },
-    "files": [],
-    "references": [
-        {
-            "path": "packages/core"
-        },
-        {
-            "path": "packages/otel"
-        }
-    ],
     "exclude": [
         "node_modules",
         "dist"

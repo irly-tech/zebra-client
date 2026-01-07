@@ -1,10 +1,18 @@
 {
     "name": "@irly-tech/zebra-client-otel",
-    "version": "0.3.2",
-    "description": "OpenTelemetry extension for @irly-tech/zebra-client",
-    "main": "./dist/index.js",
-    "types": "./dist/index.d.ts",
+    "version": "0.3.3",
     "type": "module",
+    "description": "OpenTelemetry extension for @irly-tech/zebra-client",
+    "main": "./dist/index.cjs",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
     "files": [
         "dist",
         "README.md"
@@ -17,7 +25,7 @@
         "url": "https://github.com/irly-tech/zebra-client"
     },
     "scripts": {
-        "build": "rimraf dist && tsc",
+        "build": "tsup",
         "test": "node --import tsx --test $(find src -name '*.test.ts')"
     },
     "keywords": [
@@ -30,11 +38,11 @@
     "author": "irly-tech",
     "license": "UNLICENSED",
     "peerDependencies": {
-        "@irly-tech/zebra-client": "^0.3.2",
+        "@irly-tech/zebra-client": "^0.3.3",
         "@opentelemetry/api": "^1.7.0"
     },
     "devDependencies": {
-        "@irly-tech/zebra-client": "^0.3.2",
+        "@irly-tech/zebra-client": "^0.3.3",
         "@opentelemetry/api": "^1.7.0",
         "@types/node": "^20.11.0",
         "rimraf": "^5.0.5",
