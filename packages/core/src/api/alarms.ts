@@ -26,6 +26,7 @@ export class AlarmsAPI {
      *
      * @param options - Filtering and pagination options.
      * @returns A promise that resolves to the alarms response.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found, 401, 403).
      */
     async list(options: ListAlarmsOptions): Promise<ZebraAlarmsResponse> {
         const url = new URL(`environmental/tasks/${options.taskId}/alarms`);

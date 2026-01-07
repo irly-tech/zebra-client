@@ -12,6 +12,7 @@ export class AuthAPI {
      * This token can be used by mobile apps or other clients to authenticate with the ZSFinder service.
      *
      * @returns A promise that resolves to the token response.
+     * @throws {ZebraError} If the API returns an error (e.g., 401 for invalid API key, 403 for insufficient permissions).
      */
     async createZSFinderToken(): Promise<ZSFinderTokenResponse> {
         return this.client.request<ZSFinderTokenResponse>(

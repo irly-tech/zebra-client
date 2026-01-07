@@ -19,6 +19,7 @@ export class TasksAPI {
      *
      * @param options - Configuration options for the new task.
      * @returns A promise that resolves to the created task.
+     * @throws {ZebraError} If the API returns an error (e.g., 400 for invalid options, 401, 403).
      */
     async create(options: CreateTaskOptions): Promise<Task> {
         const body = {
@@ -56,6 +57,7 @@ export class TasksAPI {
      *
      * @param taskId - The unique identifier of the task.
      * @returns A promise that resolves to the task details.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found).
      */
     async get(taskId: string): Promise<Task> {
         return this.client.request<Task>(
@@ -71,6 +73,7 @@ export class TasksAPI {
      *
      * @param options - Filtering and pagination options.
      * @returns A promise that resolves to the task list response.
+     * @throws {ZebraError} If the API returns an error (e.g., 401, 403, 500).
      */
     async list(options: ListTasksOptions = {}): Promise<TaskListResponse> {
         const params = new URLSearchParams();
@@ -95,6 +98,7 @@ export class TasksAPI {
      *
      * @param taskId - The unique identifier of the task to stop.
      * @returns A promise that resolves when the task is stopped.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found, 400 if already stopped).
      */
     async stop(taskId: string): Promise<void> {
         await this.client.request<void>(
@@ -110,6 +114,7 @@ export class TasksAPI {
      *
      * @param taskId - The unique identifier of the task to delete.
      * @returns A promise that resolves when the task is deleted.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found).
      */
     async delete(taskId: string): Promise<void> {
         await this.client.request<void>(
@@ -126,6 +131,7 @@ export class TasksAPI {
      * @param taskId - The unique identifier of the task.
      * @param sensorIds - Array of sensor IDs to assign.
      * @returns A promise that resolves to the sensor assignment response.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found, 400 for invalid sensor IDs).
      */
     async assignSensors(taskId: string, sensorIds: string[]): Promise<AssignSensorsResponse> {
         const body = {
@@ -149,6 +155,7 @@ export class TasksAPI {
      * @param taskId - The unique identifier of the task.
      * @param assetIds - Array of asset IDs to associate.
      * @returns A promise that resolves to the asset assignment response.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found, 400 for invalid asset IDs).
      */
     async assignAssets(taskId: string, assetIds: string[]): Promise<import('../types.js').AssetAssignment[]> {
         const body = {

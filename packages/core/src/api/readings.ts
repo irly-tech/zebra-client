@@ -28,6 +28,7 @@ export class ReadingsAPI {
      *
      * @param options - Time range and pagination options.
      * @returns A promise that resolves to the readings response.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found, 401, 403).
      */
     async getLog(options: GetReadingsLogOptions): Promise<ZebraReadingsResponse> {
         const params = new URLSearchParams();

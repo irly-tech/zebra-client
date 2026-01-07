@@ -66,7 +66,8 @@ export class ZebraClient {
      * @param options - Standard Fetch API RequestInit options.
      * @param route - Optional parameterized route (e.g., 'tasks/:id') for better telemetry aggregation.
      * @returns A promise that resolves to the API response object.
-     * @throws {ZebraError} If the API returns an error status code and retries are exhausted.
+     * @throws {ZebraError} If the API returns an error status code (4xx/5xx) and retries are exhausted.
+     *   The error includes `statusCode`, `response`, and `responseBody` properties for debugging.
      * @throws {Error} If a network or other low-level error occurs.
      */
     async request<T>(
@@ -139,11 +140,10 @@ export class ZebraClient {
                         context,
                         parseInt(response.headers.get('retry-after') || '0', 10)
                     );
-                    lastError = new ZebraError('Rate limit exceeded', 429, response);
+                    lastError = await ZebraError.fromResponse('Rate limit exceeded', response);
                 } else {
-                    lastError = new ZebraError(
+                    lastError = await ZebraError.fromResponse(
                         `Zebra API error: ${response.statusText}`,
-                        response.status,
                         response
                     );
                 }

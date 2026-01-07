@@ -15,6 +15,7 @@ export class WebhooksAPI {
      *
      * @param options - Configuration for the webhook subscription.
      * @returns A promise that resolves to the created subscription details.
+     * @throws {ZebraError} If the API returns an error (e.g., 400 for invalid options, 401, 403).
      */
     async register(options: CreateWebhookSubscriptionOptions): Promise<WebhookSubscription> {
         return this.client.request<WebhookSubscription>(
@@ -32,6 +33,7 @@ export class WebhooksAPI {
      * Lists all active webhook subscriptions for the tenant.
      *
      * @returns A promise that resolves to an array of webhook subscriptions.
+     * @throws {ZebraError} If the API returns an error (e.g., 401, 403, 500).
      */
     async list(): Promise<WebhookSubscription[]> {
         return this.client.request<WebhookSubscription[]>(
@@ -47,6 +49,7 @@ export class WebhooksAPI {
      *
      * @param subscriptionId - The unique identifier of the subscription to stop.
      * @returns A promise that resolves when the subscription is stopped.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if subscription not found).
      */
     async stop(subscriptionId: string): Promise<void> {
         await this.client.request<void>(
@@ -62,6 +65,7 @@ export class WebhooksAPI {
      *
      * @param subscriptionId - The unique identifier of the subscription to start.
      * @returns A promise that resolves when the subscription is started.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if subscription not found).
      */
     async start(subscriptionId: string): Promise<void> {
         await this.client.request<void>(
@@ -77,6 +81,7 @@ export class WebhooksAPI {
      *
      * @param subscriptionId - The unique identifier of the subscription to delete.
      * @returns A promise that resolves when the subscription is deleted.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if subscription not found).
      */
     async delete(subscriptionId: string): Promise<void> {
         await this.client.request<void>(

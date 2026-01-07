@@ -1,6 +1,6 @@
 {
     "name": "@irly-tech/zebra-client",
-    "version": "0.3.3",
+    "version": "0.3.4",
     "type": "module",
     "description": "Zebra API client with retry logic and telemetry support",
     "main": "./dist/index.cjs",

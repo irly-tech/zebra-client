@@ -34,6 +34,7 @@ export class SensorsAPI {
      *
      * @param serialNumber - The unique serial number of the sensor.
      * @returns A promise that resolves to the sensor status.
+     * @throws {ZebraError} If the API returns an error (e.g., 401, 403, 500).
      * @throws {Error} If no sensor is found with the given serial number.
      */
     async getStatus(serialNumber: string): Promise<SensorStatus> {
@@ -62,6 +63,7 @@ export class SensorsAPI {
      *
      * @param options - Pagination options.
      * @returns A promise that resolves to the sensor list response.
+     * @throws {ZebraError} If the API returns an error (e.g., 401, 403, 500).
      */
     async list(options: ListSensorsOptions = {}): Promise<SensorListResponse> {
         const params = new URLSearchParams();
@@ -85,6 +87,7 @@ export class SensorsAPI {
      *
      * @param serialNumber - The serial number of the sensor to register.
      * @returns A promise that resolves to the registration details.
+     * @throws {ZebraError} If the API returns an error (e.g., 400 for invalid serial, 409 for already registered).
      */
     async register(serialNumber: string): Promise<SensorRegistration> {
         const body = {
@@ -107,6 +110,7 @@ export class SensorsAPI {
      *
      * @param serialNumber - The serial number of the sensor to unregister.
      * @returns A promise that resolves when the sensor is unregistered.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if sensor not found).
      */
     async unregister(serialNumber: string): Promise<void> {
         await this.client.request<void>(
@@ -122,6 +126,7 @@ export class SensorsAPI {
      *
      * @param options - Filtering and pagination options.
      * @returns A promise that resolves to the list of enrolled sensors.
+     * @throws {ZebraError} If the API returns an error (e.g., 401, 403, 500).
      */
     async listEnrolled(options: ListEnvironmentalSensorsOptions = {}): Promise<{ sensors: ZebraEnvironmentalSensor[] }> {
         const params = new URLSearchParams();
@@ -146,6 +151,7 @@ export class SensorsAPI {
      *
      * @param sensorId - The internal ID of the sensor.
      * @returns A promise that resolves when the read is triggered.
+     * @throws {ZebraError} If the API returns an error (e.g., 404 if sensor not found).
      */
     async triggerRead(sensorId: string): Promise<void> {
         await this.client.request<void>(
