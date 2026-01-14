@@ -37,11 +37,12 @@ export class ReadingsAPI {
         if (options.endTime) {
             params.set('until', options.endTime.toISOString());
         }
-        if (options.cursor) {
-            params.set('cursor', options.cursor);
-        }
+        let endpoint = `data/environmental/tasks/${options.taskId}/log?${params.toString()}`;
 
-        const endpoint = `data/environmental/tasks/${options.taskId}/log?${params.toString()}`;
+        // Append cursor separately to avoid double URL-encoding of base64 characters
+        if (options.cursor) {
+            endpoint += `&cursor=${options.cursor}`;
+        }
 
         return this.client.request<ZebraReadingsResponse>(
             'readings.getLog',
