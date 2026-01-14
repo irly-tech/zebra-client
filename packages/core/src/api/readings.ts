@@ -33,15 +33,16 @@ export class ReadingsAPI {
     async getLog(options: GetReadingsLogOptions): Promise<ZebraReadingsResponse> {
         const params = new URLSearchParams();
         params.set('savannah_sensor_task_id', options.sensorTaskId);
-        params.set('since', options.startTime.toISOString());
+        params.set('startTime', options.startTime.toISOString());
         if (options.endTime) {
-            params.set('until', options.endTime.toISOString());
+            params.set('endTime', options.endTime.toISOString());
         }
         let endpoint = `data/environmental/tasks/${options.taskId}/log?${params.toString()}`;
 
-        // Append cursor separately to avoid double URL-encoding of base64 characters
+        // URL-encode the cursor to handle base64 special characters (+, /, =)
+        // Without encoding, + is interpreted as a space by the server
         if (options.cursor) {
-            endpoint += `&cursor=${options.cursor}`;
+            endpoint += `&cursor=${encodeURIComponent(options.cursor)}`;
         }
 
         return this.client.request<ZebraReadingsResponse>(
