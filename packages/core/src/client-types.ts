@@ -1,4 +1,5 @@
 import { TelemetryProvider } from './telemetry/types.js';
+import { LogProvider } from './logging/types.js';
 
 /**
  * Configuration options for the Zebra API client.
@@ -68,6 +69,13 @@ export interface ZebraClientConfig {
      * Useful for testing or environments without a global fetch.
      */
     fetch?: typeof fetch;
+
+    /**
+     * Optional logging provider.
+     * Defaults to ConsoleLogProvider if not specified.
+     * Use NoopLogProvider to disable all logging.
+     */
+    logProvider?: LogProvider;
 }
 
 /**
@@ -183,6 +191,7 @@ export interface InternalConfig {
         backoffMultiplier: number;
     };
     telemetryProvider: TelemetryProvider;
+    logProvider: LogProvider;
     timeoutMs: number;
     fetch: typeof fetch;
 }

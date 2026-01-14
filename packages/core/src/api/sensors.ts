@@ -52,7 +52,7 @@ export class SensorsAPI {
         }
 
         if (response.sensors.length > 1) {
-            console.warn(`Multiple sensors found for serial number ${serialNumber}, returning the first one`);
+            this.client.log.log('warn', `Multiple sensors found for serial number ${serialNumber}, returning the first one`);
         }
 
         return response.sensors[0];

@@ -1,6 +1,8 @@
 import { NoopTelemetryProvider } from './telemetry/noop.js';
+import { ConsoleLogProvider } from './logging/console.js';
 import { ZebraClientConfig, ZebraError, InternalConfig } from './client-types.js';
 import { RequestContext, RequestResult } from './telemetry/types.js';
+import { LogProvider } from './logging/types.js';
 import { ReadingsAPI } from './api/readings.js';
 import { SensorsAPI } from './api/sensors.js';
 import { AlarmsAPI } from './api/alarms.js';
@@ -16,6 +18,9 @@ import { WebhooksAPI } from './api/webhooks.js';
  */
 export class ZebraClient {
     private readonly config: InternalConfig;
+
+    /** The configured log provider for this client. */
+    public readonly log: LogProvider;
 
     /** Access to the Environmental Readings API. */
     public readonly readings: ReadingsAPI;
@@ -45,9 +50,12 @@ export class ZebraClient {
                 backoffMultiplier: config.retry?.backoffMultiplier ?? 2,
             },
             telemetryProvider: config.telemetryProvider || new NoopTelemetryProvider(),
+            logProvider: config.logProvider || new ConsoleLogProvider(),
             timeoutMs: config.timeoutMs || 30000,
             fetch: config.fetch || globalThis.fetch.bind(globalThis),
         };
+
+        this.log = this.config.logProvider;
 
         this.readings = new ReadingsAPI(this);
         this.sensors = new SensorsAPI(this);
@@ -104,7 +112,7 @@ export class ZebraClient {
                     ? this.config.baseUrl
                     : `${this.config.baseUrl}/`;
                 const url = new URL(endpoint, baseUrlStr).toString();
-                console.log(`[DEBUG] Final URL: ${url}`);
+                this.log.log('debug', `Final URL: ${url}`);
                 const response = await this.config.fetch(url, {
                     ...options,
                     headers: {
