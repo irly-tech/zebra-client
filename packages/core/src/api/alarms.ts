@@ -29,14 +29,18 @@ export class AlarmsAPI {
      * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found, 401, 403).
      */
     async list(options: ListAlarmsOptions): Promise<ZebraAlarmsResponse> {
-        const url = new URL(`environmental/tasks/${options.taskId}/alarms`);
-        if (options.since) url.searchParams.set('since', options.since.toISOString());
-        if (options.page !== undefined) url.searchParams.set('page.page', options.page.toString());
-        if (options.pageSize !== undefined) url.searchParams.set('page.size', options.pageSize.toString());
+        const params = new URLSearchParams();
+        if (options.since) params.set('since', options.since.toISOString());
+        if (options.page !== undefined) params.set('page.page', options.page.toString());
+        if (options.pageSize !== undefined) params.set('page.size', options.pageSize.toString());
+
+        const endpoint = params.toString()
+            ? `environmental/tasks/${options.taskId}/alarms?${params.toString()}`
+            : `environmental/tasks/${options.taskId}/alarms`;
 
         return this.client.request<ZebraAlarmsResponse>(
             'alarms.list',
-            url.toString(),
+            endpoint,
             { method: 'GET' },
             'environmental/tasks/:taskId/alarms'
         );
