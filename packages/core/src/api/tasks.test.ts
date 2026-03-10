@@ -57,7 +57,7 @@ describe('TasksAPI', () => {
 
         const mockFetch = async (url: string) => {
             assert.ok(url.includes('environmental/tasks/task-123'));
-            return new Response(JSON.stringify(mockTask), { status: 200 });
+            return new Response(JSON.stringify({ task: mockTask }), { status: 200 });
         };
 
         const client = new ZebraClient({

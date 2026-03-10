@@ -60,12 +60,13 @@ export class TasksAPI {
      * @throws {ZebraError} If the API returns an error (e.g., 404 if task not found).
      */
     async get(taskId: string): Promise<Task> {
-        return this.client.request<Task>(
+        const response = await this.client.request<{ task: Task }>(
             'tasks.get',
             `environmental/tasks/${taskId}`,
             { method: 'GET' },
             'environmental/tasks/:taskId'
         );
+        return response.task;
     }
 
     /**
