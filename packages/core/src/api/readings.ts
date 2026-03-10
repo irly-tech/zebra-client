@@ -32,7 +32,7 @@ export class ReadingsAPI {
      */
     async getLog(options: GetReadingsLogOptions): Promise<ZebraReadingsResponse> {
         const params = new URLSearchParams();
-        params.set('savannah_sensor_task_id', options.sensorTaskId);
+        params.set('sensorTaskId', options.sensorTaskId);
         params.set('startTime', options.startTime.toISOString());
         if (options.endTime) {
             params.set('endTime', options.endTime.toISOString());

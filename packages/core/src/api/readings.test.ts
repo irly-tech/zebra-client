@@ -37,7 +37,7 @@ describe('ReadingsAPI', () => {
 
         assert.deepStrictEqual(result, mockResponse);
         assert.ok(capturedUrl.includes('data/environmental/tasks/task-123/log'));
-        assert.ok(capturedUrl.includes('savannah_sensor_task_id=sensor-task-456'));
+        assert.ok(capturedUrl.includes('sensorTaskId=sensor-task-456'));
         assert.ok(capturedUrl.includes('startTime=2024-01-01T00%3A00%3A00.000Z'));
     });
 
