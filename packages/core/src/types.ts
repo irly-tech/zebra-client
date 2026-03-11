@@ -39,12 +39,12 @@ export interface ZebraReading {
     analytics?: {
         /** Geographic coordinates. */
         coordinates?: {
-            /** Global coordinates (latitude/longitude). */
+            /** Global coordinates (lat/lng). */
             global?: {
-                /** latitude in decimal degrees. */
-                latitude: number;
-                /** longitude in decimal degrees. */
-                longitude: number;
+                /** Latitude in decimal degrees. */
+                lat: number;
+                /** Longitude in decimal degrees. */
+                lng: number;
                 /** accuracy in meters. */
                 accuracy?: number;
             };
